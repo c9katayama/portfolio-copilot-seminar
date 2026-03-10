@@ -34,7 +34,7 @@
 | イベント | スクリプト | 説明 |
 |----------|------------|------|
 | beforeShellExecution（`git commit` / `git push` に一致時） | `.cursor/hooks/pre-commit-check.sh` | `./gradlew spotlessApply` の後に `./gradlew test` を実行。どちらかが失敗した場合は exit 2 でコマンドをブロック。 |
-| afterFileEdit | `.cursor/hooks/docs-sync-check.sh` | docs/specs の見直しリマインド。 |
+| stop | `.cursor/hooks/docs-sync-check.sh` | Agent の作業完了時に、docs/specs と `README.md` の更新要否を 1 回だけ再確認する follow-up を自動投入する。`loop_count > 0` では再投入しない。 |
 
 設定の詳細は [Cursor Docs - Hooks](https://cursor.com/docs/agent/hooks) を参照。
 
@@ -43,8 +43,8 @@
 プロジェクトルートで以下を実行すると、各スクリプトを直接試せる。
 
 ```bash
-# 1) docs リマインドのみ（即終了）
-bash .cursor/hooks/docs-sync-check.sh
+# 1) docs 更新要否の follow-up 生成
+printf '{"status":"completed","loop_count":0}\n' | bash .cursor/hooks/docs-sync-check.sh
 
 # 2) コミット/プッシュ前チェック（gradlew spotlessApply と gradlew test、失敗時は exit 2）
 bash .cursor/hooks/pre-commit-check.sh

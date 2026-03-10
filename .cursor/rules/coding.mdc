@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # コーディングルール
 
 - Java 21 と Spring Boot の慣習に従う。

@@ -70,7 +70,7 @@ Portfolio Copilot アプリの説明用スライドを `docs/` 配下に `.pptx`
 | イベント | スクリプト | 説明 |
 |----------|------------|------|
 | beforeShellExecution（`git commit` / `git push` に一致） | `.cursor/hooks/pre-commit-check.sh` | `./gradlew spotlessApply` の後に `./gradlew test` を実行し、どちらかが失敗した場合は exit 2 でコマンドをブロックする。 |
-| afterFileEdit | `.cursor/hooks/docs-sync-check.sh` | `docs/specs` の見直しリマインドを表示する。 |
+| stop | `.cursor/hooks/docs-sync-check.sh` | Agent の作業完了時に、`docs/specs` と `README.md` の更新要否を再確認する follow-up を 1 回だけ自動投入する。 |
 
 設定の詳細や手動テスト方法は [.cursor/README.md](.cursor/README.md) を参照。
 

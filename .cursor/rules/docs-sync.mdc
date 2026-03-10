@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # ドキュメント同期ルール
 
 - 要件や挙動が変わったら、必要に応じて `requirements.md`、`design.md`、`tasks.md` を更新する。

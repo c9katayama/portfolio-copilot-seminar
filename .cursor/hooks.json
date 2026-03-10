@@ -7,12 +7,6 @@
         "timeout": 120,
         "matcher": "git\\s+(commit|push)"
       }
-    ],
-    "afterFileEdit": [
-      {
-        "command": ".cursor/hooks/docs-sync-check.sh",
-        "timeout": 5
-      }
     ]
   }
 }
