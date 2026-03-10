@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "hooks/pre-commit-check.sh",
+        "timeout": 120,
+        "matcher": "git\\s+(commit|push)"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "hooks/docs-sync-check.sh",
+        "timeout": 5
+      },
+      {
+        "command": "hooks/lint-test-on-change.sh",
+        "timeout": 180
+      }
+    ]
+  }
+}

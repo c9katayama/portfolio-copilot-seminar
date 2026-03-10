@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Copilot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="page-shell">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <p class="eyebrow">Cursor Seminar サンプル</p>
+            <h1>Portfolio Copilot</h1>
+            <p class="muted">ポートフォリオ管理、AI対話、提案書ドラフト生成をローカルで実演するサンプルです。</p>
+        </div>
+
+        <section class="card">
+            <h2>Portfolios</h2>
+            <nav class="portfolio-nav">
+                <a th:each="portfolio : ${pageView.portfolios()}"
+                   th:href="@{/portfolios/{id}(id=${portfolio.id()})}"
+                   th:classappend="${portfolio.id().equals(selectedPortfolio.id())} ? 'active' : ''"
+                   th:attr="aria-current=${portfolio.id().equals(selectedPortfolio.id())} ? 'page' : null">
+                    <span class="portfolio-name" th:text="${portfolio.name()}">Portfolio Name</span>
+                    <span class="portfolio-risk" th:text="${portfolio.riskProfile()}">Risk</span>
+                </a>
+            </nav>
+        </section>
+
+        <section class="card compact">
+            <h2>この画面で見るポイント</h2>
+            <ul>
+                <li>spec-driven development</li>
+                <li>rules / commands / skills</li>
+                <li>AI discussion + proposal draft</li>
+                <li>future update consistency</li>
+            </ul>
+        </section>
+    </aside>
+
+    <main class="content">
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Selected Portfolio</p>
+                <h2 th:text="${selectedPortfolio.name()}">Core Growth 2030</h2>
+                <p class="hero-copy" th:text="${selectedPortfolio.objective()}">Objective</p>
+            </div>
+            <div class="hero-metrics">
+                <div class="metric">
+                    <span class="metric-label">Client Segment</span>
+                    <strong th:text="${selectedPortfolio.clientSegment()}">Mass Affluent</strong>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Risk</span>
+                    <strong th:text="${selectedPortfolio.riskProfile()}">Moderate</strong>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Invested</span>
+                    <strong th:text="${#numbers.formatDecimal(selectedPortfolio.investedAmount(), 0, 'COMMA', 0, 'POINT')} + ' JPY'">18,000,000 JPY</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid-two">
+            <section class="card">
+                <div class="section-heading">
+                    <h3>Holdings</h3>
+                    <span class="pill">SQLite seeded data</span>
+                </div>
+                <section class="allocation-overview" aria-labelledby="allocationOverviewTitle">
+                    <div class="subsection-heading">
+                        <h4 id="allocationOverviewTitle">Allocation Overview</h4>
+                        <p class="muted">保有比率の比較を一覧より先に確認できます。</p>
+                    </div>
+                    <ol class="allocation-chart">
+                        <li class="allocation-chart-row" th:each="holding : ${holdings}">
+                            <div class="allocation-chart-header">
+                                <div class="allocation-chart-labels">
+                                    <strong th:text="${holding.instrumentName()}">Instrument Name</strong>
+                                    <span class="muted" th:text="${holding.assetClass() + ' / ' + holding.ticker()}">Asset Class / Ticker</span>
+                                </div>
+                                <span class="tabular allocation-chart-value" th:text="${holding.allocationPercent()} + '%'">42.0%</span>
+                            </div>
+                            <div class="allocation-bar-track" aria-hidden="true">
+                                <span class="allocation-bar-fill" th:style="|width:${holding.allocationPercent()}%;|"></span>
+                            </div>
+                        </li>
+                    </ol>
+                </section>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Ticker</th>
+                        <th>Allocation</th>
+                        <th>Market Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="holding : ${holdings}">
+                        <td>
+                            <strong th:text="${holding.instrumentName()}">Instrument Name</strong>
+                            <div class="muted" th:text="${holding.assetClass()}">Asset Class</div>
+                        </td>
+                        <td th:text="${holding.ticker()}">VT</td>
+                        <td class="tabular" th:text="${holding.allocationPercent()} + '%'">42.0%</td>
+                        <td class="tabular" th:text="${#numbers.formatDecimal(holding.marketValue(), 0, 'COMMA', 0, 'POINT')} + ' JPY'">7,560,000 JPY</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="stack">
+                <section class="card">
+                    <div class="section-heading">
+                        <h3>AI Discussion</h3>
+                        <span class="pill">Anthropic API</span>
+                    </div>
+                    <div class="message-list" id="messageList">
+                        <article class="message"
+                                 th:each="message : ${messages}"
+                                 th:classappend="${message.role().name() == 'ASSISTANT'} ? 'assistant' : 'user'">
+                            <header>
+                                <strong th:text="${message.role().name() == 'ASSISTANT'} ? 'AI' : 'User'">Role</strong>
+                                <span th:text="${#temporals.format(message.createdAt(), 'yyyy-MM-dd HH:mm')}">2026-03-05 09:00</span>
+                            </header>
+                            <p th:text="${message.content()}">Message</p>
+                        </article>
+                    </div>
+                    <form id="chatForm" class="action-form" th:attr="data-portfolio-id=${selectedPortfolio.id()}" aria-describedby="chatStatus">
+                        <label for="chatMessage">相談内容</label>
+                        <textarea id="chatMessage" name="message" rows="4" placeholder="このポートフォリオの見直し観点を相談する" aria-invalid="false" aria-errormessage="chatStatus"></textarea>
+                        <div class="action-row">
+                            <button type="submit" id="chatSubmit">AIに相談する</button>
+                            <span class="status-text" id="chatStatus" role="status" aria-live="polite"></span>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card">
+                    <div class="section-heading">
+                        <h3>Proposal Draft</h3>
+                        <button id="proposalButton"
+                                class="secondary-button"
+                                type="button"
+                                th:attr="data-portfolio-id=${selectedPortfolio.id()}">提案書ドラフトを生成</button>
+                    </div>
+                    <div id="proposalSkeleton" class="skeleton" aria-hidden="true" hidden>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+                    <div class="proposal" th:if="${latestProposal != null}">
+                        <h4 th:text="${latestProposal.title()}">Proposal Title</h4>
+                        <pre th:text="${latestProposal.content()}">Proposal Content</pre>
+                    </div>
+                    <p class="muted" th:if="${latestProposal == null}">まだ提案書ドラフトは生成されていません。上のボタンから生成できます。</p>
+                    <p class="status-text" id="proposalStatus" role="status" aria-live="polite"></p>
+                </section>
+            </section>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/portfolio.js}"></script>
+</body>
+</html>
