@@ -1,6 +1,6 @@
 # Portfolio Copilot Seminar
 
-社内セミナー向けに作成した、Cursor中心の生成AI開発デモ用リポジトリです。金融ソリューション開発の文脈を前提に、仕様駆動開発、Rules、Commands、Skills、MCP、Hooks、マルチエージェント活用をまとめて説明できる構成にしています。
+生成AI開発デモ用リポジトリです。システム開発の文脈を前提に、仕様駆動開発、Rules、Commands、Skills、MCP、Hooks、マルチエージェント活用をまとめて説明できる構成にしています。
 
 ## 含まれるもの
 - Spring Boot + SQLite のローカル実行アプリ
@@ -37,8 +37,3 @@ Anthropic API を使う場合は `app.ai.provider=anthropic` と `ANTHROPIC_API_
 2. 生成物は `docs/slides/portfolio-copilot-briefing.pptx` に出力される
 3. スライド構成と参照元は `docs/slides/portfolio-copilot-briefing.md` に整理している
 
-## セミナーで見せるポイント
-- 仕様書から始める
-- Rules / Commands / Skills で再現可能な開発フローを作る
-- MCP とマルチエージェントで探索と実装を加速する
-- Hooks とテストで整合性を保つ
